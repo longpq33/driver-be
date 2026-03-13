@@ -1,17 +1,7 @@
-import {
-  Controller,
-  Get,
-  Put,
-  Body,
-  UseGuards,
-  Request,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Controller, Get, Put, Body, UseGuards, Request } from '@nestjs/common';
+import { UsersService } from '@/users/users.service';
+import { UpdateUserDto } from '@/users/dto/update-user.dto';
+import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 
 interface AuthenticatedRequest extends Request {
   user: { userId: string };
@@ -35,19 +25,5 @@ export class UsersController {
   ) {
     const user = await this.usersService.update(req.user.userId, dto);
     return { success: true, data: user };
-  }
-
-  @Put('password')
-  @HttpCode(HttpStatus.OK)
-  async changePassword(
-    @Request() req: AuthenticatedRequest,
-    @Body() dto: ChangePasswordDto,
-  ) {
-    await this.usersService.changePassword(
-      req.user.userId,
-      dto.currentPassword,
-      dto.newPassword,
-    );
-    return { success: true, message: 'Password changed successfully' };
   }
 }

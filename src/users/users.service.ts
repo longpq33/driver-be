@@ -1,13 +1,11 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import { User } from './entities/user.entity';
+import { User } from '@/users/entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -44,22 +42,5 @@ export class UsersService {
     const user = await this.findById(id);
     if (!user) throw new NotFoundException('User not found');
     return user;
-  }
-
-  async changePassword(
-    id: string,
-    currentPassword: string,
-    newPassword: string,
-  ): Promise<void> {
-    const user = await this.findById(id);
-    if (!user) throw new NotFoundException('User not found');
-
-    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
-
-    if (!isValid)
-      throw new UnauthorizedException('Current password is incorrect');
-
-    const newHash = await bcrypt.hash(newPassword, 10);
-    await this.userRepository.update(id, { passwordHash: newHash });
   }
 }

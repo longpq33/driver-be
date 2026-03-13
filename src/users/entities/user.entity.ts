@@ -18,6 +18,7 @@ export enum UserProvider {
   LOCAL = 'local',
   GOOGLE = 'google',
   FACEBOOK = 'facebook',
+  PHONE = 'phone',
 }
 
 @Entity('users')
@@ -31,11 +32,8 @@ export class User {
   @Column({ length: 20, unique: true })
   phone: string;
 
-  @Column({ length: 255, unique: true })
+  @Column({ length: 255, unique: true, nullable: true })
   email: string;
-
-  @Column({ name: 'password_hash', length: 255 })
-  passwordHash: string;
 
   @Column({ length: 100 })
   name: string;
